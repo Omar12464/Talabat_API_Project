@@ -1,5 +1,6 @@
 
 namespace Talabat_API
+
 {
     public class Program
     {
@@ -13,6 +14,7 @@ namespace Talabat_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.addDbContext();
 
             var app = builder.Build();
 
@@ -27,6 +29,7 @@ namespace Talabat_API
 
             app.UseAuthorization();
 
+            
 
             app.MapControllers();
 
