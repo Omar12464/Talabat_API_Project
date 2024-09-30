@@ -1,0 +1,82 @@
+[
+  {
+    "Name": "iPhone 14",
+    "Description": "Latest model of Apple iPhone",
+    "PictureUrl": "https://example.com/iphone14.jpg",
+    "Price": 999.99,
+    "BrandId": 1,
+    "CategoryId": 1
+  },
+  {
+    "Name": "Galaxy S22",
+    "Description": "Latest Samsung Galaxy phone",
+    "PictureUrl": "https://example.com/galaxys22.jpg",
+    "Price": 899.99,
+    "BrandId": 3,
+    "CategoryId": 1
+  },
+  {
+    "Name": "Air Max Sneakers",
+    "Description": "Comfortable running shoes",
+    "PictureUrl": "https://example.com/airmax.jpg",
+    "Price": 199.99,
+    "BrandId": 2,
+    "CategoryId": 2
+  },
+  {
+    "Name": "OLED TV",
+    "Description": "55-inch OLED TV by LG",
+    "PictureUrl": "https://example.com/oledtv.jpg",
+    "Price": 1299.99,
+    "BrandId": 5,
+    "CategoryId": 1
+  },
+  {
+    "Name": "Bosch Dishwasher",
+    "Description": "Energy-efficient dishwasher",
+    "PictureUrl": "https://example.com/dishwasher.jpg",
+    "Price": 799.99,
+    "BrandId": 7,
+    "CategoryId": 3
+  },
+  {
+    "Name": "The Great Gatsby",
+    "Description": "Classic novel by F. Scott Fitzgerald",
+    "PictureUrl": "https://example.com/greatgatsby.jpg",
+    "Price": 14.99,
+    "BrandId": 4,
+    "CategoryId": 4
+  },
+  {
+    "Name": "Foundation",
+    "Description": "Liquid foundation by L'Oreal",
+    "PictureUrl": "https://example.com/foundation.jpg",
+    "Price": 29.99,
+    "BrandId": 8,
+    "CategoryId": 5
+  },
+  {
+    "Name": "Car Engine Oil",
+    "Description": "Premium engine oil for cars",
+    "PictureUrl": "https://example.com/engineoil.jpg",
+    "Price": 49.99,
+    "BrandId": 9,
+    "CategoryId": 6
+  },
+  {
+    "Name": "Basketball",
+    "Description": "Official size basketball",
+    "PictureUrl": "https://example.com/basketball.jpg",
+    "Price": 29.99,
+    "BrandId": 6,
+    "CategoryId": 7
+  },
+  {
+    "Name": "Chocolate Bar",
+    "Description": "Delicious milk chocolate bar",
+    "PictureUrl": "https://example.com/chocolatebar.jpg",
+    "Price": 1.99,
+    "BrandId": 10,
+    "CategoryId": 9
+  }
+]
