@@ -15,13 +15,13 @@ namespace Talabat_Core.Models
         public string PictureUrl { get; set; }
 
         public decimal Price { get; set; }
-        [InverseProperty("Products")]
+        [InverseProperty("Productss")]
         public ProductBrand Brand { get; set; }
         public int BrandId { get; set; }
         
         [InverseProperty("Products")]
         public ProductType Category { get; set; }
-        public string CategoryName { get; set; }
+        public int CategoryId { get; set; }
 
     }
 }

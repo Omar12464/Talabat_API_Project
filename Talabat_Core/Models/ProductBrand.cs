@@ -9,6 +9,6 @@ namespace Talabat_Core.Models
     public class ProductBrand: ModelBase
     {
         public string Name { get; set; }
-        public ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public ICollection<Product> Productss { get; set; } = new HashSet<Product>();
     }
 }
