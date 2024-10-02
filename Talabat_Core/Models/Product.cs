@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Talabat_Core.Models
@@ -16,10 +17,13 @@ namespace Talabat_Core.Models
 
         public decimal Price { get; set; }
         [InverseProperty("Productss")]
+        [JsonIgnore]
         public ProductBrand Brand { get; set; }
         public int BrandId { get; set; }
         
         [InverseProperty("Products")]
+        [JsonIgnore]
+
         public ProductType Category { get; set; }
         public int CategoryId { get; set; }
 
