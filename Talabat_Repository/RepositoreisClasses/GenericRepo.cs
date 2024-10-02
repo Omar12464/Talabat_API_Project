@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
+using Talabat_Core.Specification;
 using Talabat_Repository.Data;
 
 namespace Talabat_Repository.RepositoreisClasses
@@ -34,6 +35,19 @@ namespace Talabat_Repository.RepositoreisClasses
         public async Task<T> GetAsync(int id)
         {
             return await _dbcontext.Set<T>().FindAsync(id);
+        }
+
+         async Task<IEnumerable<T>> IGenericIcs<T>.GettAllWithSpecAsync(ISpecification<T> spec)
+        {
+            return await SpecificationEvaluator<T>.GetQuery(_dbcontext.Set<T>(), spec).ToListAsync();
+        }
+
+
+         async Task<T> IGenericIcs<T>.GettWithSpecAsync(ISpecification<T> spec)
+        {
+          
+                return await SpecificationEvaluator<T>.GetQuery(_dbcontext.Set<T>(), spec).FirstOrDefaultAsync();
+          
         }
     }
 }
