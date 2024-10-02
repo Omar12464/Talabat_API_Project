@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Talabat_API.DTOs;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
 using Talabat_Repository.Data;
@@ -12,31 +14,37 @@ namespace Talabat_API.Controllers
     {
         private readonly StoreContext _context;
         private readonly IGenericIcs<Product> _genericrepo;
+        private readonly IMapper _map;
 
-        public ProductsController(StoreContext context,IGenericIcs<Product> genericrepo)
+        public ProductsController(StoreContext context,IGenericIcs<Product> genericrepo, IMapper map)
         {
             _context = context;
             _genericrepo = genericrepo;
+            _map = map;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            
-            
-                var products = await _genericrepo.GetAllAsync();
-                return Ok(products);
+
+            var spec = new ProductWithBrand_Category();
+            var products = await _genericrepo.GettAllWithSpecAsync(spec);
+            var map = _map.Map<IEnumerable< Product>,IEnumerable< ProductDTO>>(products);
+            return Ok(map);
             
             
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct(int id)
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProduct(int id)
         {
-            var product = await _genericrepo.GetAsync(id);
+            var spec=new ProductWithBrand_Category(id);
+            var product = await _genericrepo.GettWithSpecAsync(spec);
             if (product == null) { return NotFound(); }
+            var map = _map.Map<Product,ProductDTO>(product);
 
-            return Ok(product);
+
+            return Ok(map);
         }
             
     }

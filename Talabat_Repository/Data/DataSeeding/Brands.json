@@ -1,12 +1,25 @@
 [
-  { "Name": "Apple" },
-  { "Name": "Nike" },
-  { "Name": "Samsung" },
-  { "Name": "Sony" },
-  { "Name": "LG" },
-  { "Name": "Adidas" },
-  { "Name": "Bosch" },
-  { "Name": "L'Oreal" },
-  { "Name": "Toyota" },
-  { "Name": "Nestle" }
+    {
+        "Name": "Starbucks"
+    },
+    {
+        "Name": "Costa"
+    },
+    {
+        "Name": "Cilantro"
+    },
+    {
+        "Name": "TBS"
+    },
+    {
+        "Name": "On The Run"
+    },
+    {
+        "Id": 6,
+        "Name": "Caribou"
+    },
+    {
+        "Id": 7,
+        "Name": "Krispy Kreme"
+    }
 ]

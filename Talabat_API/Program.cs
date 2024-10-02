@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Talabat_API.ProfileMap;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
 using Talabat_Repository.Data;
@@ -23,6 +24,7 @@ namespace Talabat_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
             builder.Services.AddDbContext<StoreContext>(
                  options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
@@ -66,7 +68,7 @@ namespace Talabat_API
 
             app.UseAuthorization();
 
-            
+            app.UseStaticFiles();
 
             app.MapControllers();
 
