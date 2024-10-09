@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Talabat_API.Errors;
+using Talabat_API.MiddleWare;
 using Talabat_API.ProfileMap;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
@@ -81,8 +82,8 @@ namespace Talabat_API
 
 
 
-
             // Configure the HTTP request pipeline.
+            app.UseMiddleware<ExceptionMiddleWare>();
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -94,6 +95,8 @@ namespace Talabat_API
             app.UseAuthorization();
 
             app.UseStaticFiles();
+
+            app.UseDeveloperExceptionPage();
 
             app.MapControllers();
 
