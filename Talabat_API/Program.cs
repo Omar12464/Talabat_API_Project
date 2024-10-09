@@ -1,6 +1,9 @@
 
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Talabat_API.Errors;
 using Talabat_API.ProfileMap;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
@@ -24,13 +27,35 @@ namespace Talabat_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
             builder.Services.AddDbContext<StoreContext>(
                  options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
             builder.Services.AddScoped<IGenericIcs<Product>, GenericRepo<Product>>();
             builder.Services.AddScoped<IGenericIcs<ProductBrand>, GenericRepo<ProductBrand>>();
             builder.Services.AddScoped<IGenericIcs<ProductType>, GenericRepo<ProductType>>();
+
+            builder.Services.Configure<ApiBehaviorOptions>(
+                 options =>
+                 {
+                     options.InvalidModelStateResponseFactory =
+                     (actioncontext) =>
+                     {
+                         var errors = actioncontext.ModelState.Where(e => e.Value.Errors.Count() > 0)
+                         .SelectMany(p => p.Value.Errors).Select(e => e.ErrorMessage).ToList();
+                         var response = new ApiValidationErrorResponse()
+                         {
+                             Errors = errors
+                         };
+                         return new BadRequestObjectResult(response);   
+                     };
+
+
+
+                 }
+                );
 
             //builder.Services.AddScoped(typeof(IGenericIcs<>), typeof(GenericRepo<>));
 
