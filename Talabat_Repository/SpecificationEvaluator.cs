@@ -15,15 +15,29 @@ namespace Talabat_Repository
         public static IQueryable<TEntity> GetQuery(IQueryable<TEntity> innerquery,ISpecification<TEntity> spec)
         {
             var query = innerquery;
+
             if(spec.Criteria is not null)
             {
                 query=query.Where(spec.Criteria);
             }
+            if (spec.OrderByASC != null)
+            {
+                query = query.OrderBy(spec.OrderByASC);
+            }
 
+            else if (spec.OrderByDESC != null)
+            {
+                query=query.OrderBy(spec.OrderByDESC);
+            }
+            if (spec.IsPaginationEnable == true)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
             if (spec.Includes != null && spec.Includes.Any())
             {
                 query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
             }
+
             return query;
 
              
