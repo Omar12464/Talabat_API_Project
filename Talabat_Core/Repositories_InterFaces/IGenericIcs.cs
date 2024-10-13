@@ -11,9 +11,9 @@ namespace Talabat_Core.Repositories_InterFaces
     {
         Task<T> GetAsync(int id);
 
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IReadOnlyList<T>> GetAllAsync();
 
-        public Task<IEnumerable<T>> GettAllWithSpecAsync(ISpecification<T> spec);
+        public Task<IReadOnlyList<T>> GettAllWithSpecAsync(ISpecification<T> spec);
 
         public Task<T> GettWithSpecAsync(ISpecification<T> spec);
 

@@ -25,16 +25,16 @@ namespace Talabat_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductDTO>>> GetProducts(string sort)
         {
 
-            var spec = new ProductWithBrand_Category();
+            var spec = new ProductWithBrand_Category(sort);
             var products = await _genericrepo.GettAllWithSpecAsync(spec);
-            var map = _map.Map<IEnumerable< Product>,IEnumerable< ProductDTO>>(products);
+            var map = _map.Map<IReadOnlyList< Product>, IReadOnlyList< ProductDTO>>(products);
             return Ok(map);
             
             
-        }
+         }
         [ProducesResponseType(typeof(ProductDTO),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]

@@ -19,11 +19,19 @@ namespace Talabat_Repository
             {
                 query=query.Where(spec.Criteria);
             }
-
+            if (spec.OrderByASC != null)
+            {
+                query = query.OrderBy(spec.OrderByASC);
+            }
+            else if (spec.OrderByDESC != null)
+            {
+                query=query.OrderBy(spec.OrderByDESC);
+            }
             if (spec.Includes != null && spec.Includes.Any())
             {
                 query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
             }
+
             return query;
 
              

@@ -19,13 +19,14 @@ namespace Talabat_Repository.RepositoreisClasses
         {
             _dbcontext = dbcontext;
         }
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IReadOnlyList<T>> GetAllAsync()
         {
             //if (typeof(T) == typeof(Product))
             //{
-            //    return (IEnumerable<T>) await _dbcontext.Set<Product>()
+            //    return (IReadOnlyList<T>)await _dbcontext.Set<Product>()
             //        .Include(p => p.BrandId)
             //        .Include(c => c.CategoryId)
+            //        .OrderBy(c=>c.Name)
             //        .ToListAsync();
             //}
 
@@ -37,8 +38,9 @@ namespace Talabat_Repository.RepositoreisClasses
             return await _dbcontext.Set<T>().FindAsync(id);
         }
 
-         async Task<IEnumerable<T>> IGenericIcs<T>.GettAllWithSpecAsync(ISpecification<T> spec)
+         async Task<IReadOnlyList<T>> IGenericIcs<T>.GettAllWithSpecAsync(ISpecification<T> spec)
         {
+
             return await SpecificationEvaluator<T>.GetQuery(_dbcontext.Set<T>(), spec).ToListAsync();
         }
 
