@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talabat_API.DTOs;
 using Talabat_API.Errors;
+using Talabat_API.Helper;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
+using Talabat_Core.Specification.ProductSpecifications;
 using Talabat_Repository.Data;
 using Talabat_Repository.RepositoreisClasses;
 
@@ -25,13 +27,13 @@ namespace Talabat_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDTO>>> GetProducts(string sort)
+        public async Task<ActionResult<IReadOnlyList<ProductDTO>>> GetProducts([FromQuery]ProductSpecification paramss)
         {
 
-            var spec = new ProductWithBrand_Category(sort);
+            var spec = new ProductWithBrand_Category(paramss);
             var products = await _genericrepo.GettAllWithSpecAsync(spec);
             var map = _map.Map<IReadOnlyList< Product>, IReadOnlyList< ProductDTO>>(products);
-            return Ok(map);
+            return Ok(new Pagination<ProductDTO>(paramss.PageSize,paramss.pageIndex,map));
             
             
          }

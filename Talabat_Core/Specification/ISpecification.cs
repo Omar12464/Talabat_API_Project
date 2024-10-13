@@ -14,6 +14,15 @@ namespace Talabat_Core.Specification
 
         public Expression<Func<T,object>> OrderByASC { get; set; }
         public Expression<Func<T, object>> OrderByDESC { get; set; }
+        public int Take { get; set; }
+        public int Skip { get; set; }
+
+        public bool  IsPaginationEnable { get; set; }
+
+        
+
+
+
 
     }
 }

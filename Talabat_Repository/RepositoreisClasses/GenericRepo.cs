@@ -19,6 +19,8 @@ namespace Talabat_Repository.RepositoreisClasses
         {
             _dbcontext = dbcontext;
         }
+
+
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
             //if (typeof(T) == typeof(Product))
@@ -38,7 +40,12 @@ namespace Talabat_Repository.RepositoreisClasses
             return await _dbcontext.Set<T>().FindAsync(id);
         }
 
-         async Task<IReadOnlyList<T>> IGenericIcs<T>.GettAllWithSpecAsync(ISpecification<T> spec)
+        //public async Task<T> GetCountAsync(ISpecification<T> spec)
+        //{
+        //    return await SpecificationEvaluator<T>.GetQuery(_dbcontext.Set<T>()).CountAsync();
+        //}
+
+        async Task<IReadOnlyList<T>> IGenericIcs<T>.GettAllWithSpecAsync(ISpecification<T> spec)
         {
 
             return await SpecificationEvaluator<T>.GetQuery(_dbcontext.Set<T>(), spec).ToListAsync();
