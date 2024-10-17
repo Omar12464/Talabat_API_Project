@@ -40,6 +40,11 @@ namespace Talabat_Repository.RepositoreisClasses
             return await _dbcontext.Set<T>().FindAsync(id);
         }
 
+        public Task<T> GetCountAsync(ISpecification<T> spec)
+        {
+            throw new NotImplementedException();
+        }
+
         //public async Task<T> GetCountAsync(ISpecification<T> spec)
         //{
         //    return await SpecificationEvaluator<T>.GetQuery(_dbcontext.Set<T>()).CountAsync();

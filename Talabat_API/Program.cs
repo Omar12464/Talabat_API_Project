@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 using Talabat_API.Errors;
 using Talabat_API.MiddleWare;
 using Talabat_API.ProfileMap;
@@ -34,6 +35,18 @@ namespace Talabat_API
             builder.Services.AddDbContext<StoreContext>(
                  options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
+            builder.Services.AddDbContext<StoreContext>(
+                    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                    );
+            builder.Services.AddSingleton<IConnectionMultiplexer>(
+                (serviceprovider)=>
+                {
+                    var connection = builder.Configuration.GetConnectionString("Redis");
+                    return ConnectionMultiplexer.Connect(connection);
+                }
+                );
+            builder.Services.AddScoped(typeof(IBasketRepo), typeof(BasketRepo));
+
             builder.Services.AddScoped<IGenericIcs<Product>, GenericRepo<Product>>();
             builder.Services.AddScoped<IGenericIcs<ProductBrand>, GenericRepo<ProductBrand>>();
             builder.Services.AddScoped<IGenericIcs<ProductType>, GenericRepo<ProductType>>();
