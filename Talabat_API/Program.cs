@@ -10,6 +10,7 @@ using Talabat_API.ProfileMap;
 using Talabat_Core.Models;
 using Talabat_Core.Repositories_InterFaces;
 using Talabat_Repository.Data;
+using Talabat_Repository.Data.Identity;
 using Talabat_Repository.RepositoreisClasses;
 
 namespace Talabat_API
@@ -35,9 +36,9 @@ namespace Talabat_API
             builder.Services.AddDbContext<StoreContext>(
                  options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
-            builder.Services.AddDbContext<StoreContext>(
-                    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                    );
+            builder.Services.AddDbContext<AppIdentityDBContext>(
+              options => options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"))
+          );
             builder.Services.AddSingleton<IConnectionMultiplexer>(
                 (serviceprovider)=>
                 {
@@ -79,12 +80,14 @@ namespace Talabat_API
 
             var services = scope.ServiceProvider;//resolve the serices that you want to use as a depedndency injection
             var _dbcontext = services.GetRequiredService<StoreContext>();
+            var _identitydbccontext=services.GetRequiredService<AppIdentityDBContext>();
 
             var loggerfactory = services.GetRequiredService<ILoggerFactory>();
             try
             {
                 await _dbcontext.Database.MigrateAsync();
                 await StoreContextSeed.SeedAsync(_dbcontext);
+                await _identitydbccontext.Database.MigrateAsync();
             }
             catch (Exception ex)
             {

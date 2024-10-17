@@ -13,9 +13,8 @@ namespace Talabat_Repository.Data
     {
         private readonly DbContextOptions _options;
 
-        public StoreContext(DbContextOptions options):base(options)
+        public StoreContext(DbContextOptions<StoreContext> options):base(options)
         {
-            _options = options;
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

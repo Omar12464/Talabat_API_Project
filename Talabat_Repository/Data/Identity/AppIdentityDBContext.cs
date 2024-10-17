@@ -12,9 +12,11 @@ namespace Talabat_Repository.Data.Identity
 {
     public class AppIdentityDBContext:IdentityDbContext<AppUser>
     {
+        private readonly DbContextOptions<AppIdentityDBContext> _options;
+
         public AppIdentityDBContext(DbContextOptions<AppIdentityDBContext> options):base(options)
         {
-            
+            _options = options;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
