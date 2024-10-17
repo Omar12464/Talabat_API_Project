@@ -1,14 +1,18 @@
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 using Talabat_API.Errors;
 using Talabat_API.MiddleWare;
 using Talabat_API.ProfileMap;
 using Talabat_Core.Models;
+using Talabat_Core.Models.Identity;
 using Talabat_Core.Repositories_InterFaces;
 using Talabat_Repository.Data;
+using Talabat_Repository.Data.Identity;
 using Talabat_Repository.RepositoreisClasses;
 
 namespace Talabat_API
@@ -34,6 +38,18 @@ namespace Talabat_API
             builder.Services.AddDbContext<StoreContext>(
                  options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
+            builder.Services.AddDbContext<AppIdentityDBContext>(
+              options => options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"))
+          );
+            builder.Services.AddSingleton<IConnectionMultiplexer>(
+                (serviceprovider)=>
+                {
+                    var connection = builder.Configuration.GetConnectionString("Redis");
+                    return ConnectionMultiplexer.Connect(connection);
+                }
+                );
+            builder.Services.AddScoped(typeof(IBasketRepo), typeof(BasketRepo));
+
             builder.Services.AddScoped<IGenericIcs<Product>, GenericRepo<Product>>();
             builder.Services.AddScoped<IGenericIcs<ProductBrand>, GenericRepo<ProductBrand>>();
             builder.Services.AddScoped<IGenericIcs<ProductType>, GenericRepo<ProductType>>();
@@ -57,7 +73,12 @@ namespace Talabat_API
 
                  }
                 );
+            builder.Services.AddIdentity<AppUser, IdentityRole>(
+                options =>
+                {
 
+                }
+                ).AddEntityFrameworkStores<AppIdentityDBContext>().AddDefaultTokenProviders();
             //builder.Services.AddScoped(typeof(IGenericIcs<>), typeof(GenericRepo<>));
 
             var app = builder.Build();
@@ -66,12 +87,15 @@ namespace Talabat_API
 
             var services = scope.ServiceProvider;//resolve the serices that you want to use as a depedndency injection
             var _dbcontext = services.GetRequiredService<StoreContext>();
-
+            var _identitydbccontext=services.GetRequiredService<AppIdentityDBContext>();
+            var _usermanager = services.GetRequiredService<UserManager<AppUser>>();
             var loggerfactory = services.GetRequiredService<ILoggerFactory>();
             try
             {
+                await AppIdentityDBcontextSeed.SeedUserAsync(_usermanager);
                 await _dbcontext.Database.MigrateAsync();
                 await StoreContextSeed.SeedAsync(_dbcontext);
+                await _identitydbccontext.Database.MigrateAsync();
             }
             catch (Exception ex)
             {
