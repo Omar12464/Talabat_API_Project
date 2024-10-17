@@ -21,7 +21,23 @@ namespace Talabat_Repository.Data.Identity
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+            
+            
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Address>().ToTable("Adresses");
+                
+            //builder.Entity<AppUser>()
+            //.HasOne(u => u.Address)
+            //.WithOne(a => a.appUser)
+            //.HasForeignKey<Address>(a => a.AppUserId) // Foreign key is in Address
+            //.IsRequired(false); // Address must have an AppUser
+
+        }
+
 
 
     }
