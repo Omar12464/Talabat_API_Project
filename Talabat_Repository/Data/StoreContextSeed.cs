@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Talabat_Core.Models;
+using Talabat_Core.Order_Aggregate;
 
 namespace Talabat_Repository.Data
 {
@@ -26,11 +27,16 @@ namespace Talabat_Repository.Data
             if (brands.Count() > 0)
             {
                 if (storeContext.Brands.Count() == 0)
-                    foreach (var brand in brands)
+                {
+                    if (brands?.Count() > 0)
                     {
-                        storeContext.Set<ProductBrand>().Add(new ProductBrand { Name=brand.Name,Productss=brand.Productss});
+                        foreach (var brand in brands)
+                        {
+                            storeContext.Set<ProductBrand>().Add(new ProductBrand { Name = brand.Name, Productss = brand.Productss });
+                        }
+                        await storeContext.SaveChangesAsync();
                     }
-                storeContext.SaveChanges();
+                }
             }
 
             var categorydata = File.ReadAllText("../Talabat_Repository/Data/DataSeeding/categories.json");
@@ -39,12 +45,15 @@ namespace Talabat_Repository.Data
             {
                 if (storeContext.Caetgory.Count() == 0)
                 {
-                    foreach (var category in categories)
+                    if (categories?.Count() > 0)
                     {
-                        storeContext.Set<ProductType>().Add(new ProductType { Name=category.Name,Products=category.Products});
+                        foreach (var category in categories)
+                        {
+                            storeContext.Set<ProductType>().Add(new ProductType { Name = category.Name, Products = category.Products });
+                        }
+                        await storeContext.SaveChangesAsync();
                     }
                 }
-                storeContext.SaveChanges();
             }
 
             var Productdata = File.ReadAllText("../Talabat_Repository/Data/DataSeeding/products.json");
@@ -53,12 +62,35 @@ namespace Talabat_Repository.Data
             {
                 if (storeContext.Products.Count() == 0)
                 {
-                    foreach (var product in products)
+                    if (products?.Count() > 0)
                     {
-                        storeContext.Set<Product>().Add(product);
+                        foreach (var product in products)
+                        {
+                            storeContext.Set<Product>().Add(product);
+                        }
+                        await storeContext.SaveChangesAsync();
                     }
                 }
-                storeContext.SaveChanges();
+            }
+            //********************************************
+            //Delivery
+
+            var deliveryData = File.ReadAllText("../Talabat_Repository/Data/DataSeeding/delivery.json");
+            var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryData);
+            if (products.Count > 0)
+            {
+                if (storeContext.DeliveryMethods.Count() == 0)
+                {
+                    if (deliveryMethods?.Count() > 0)
+                    {
+                        foreach (var deliveryMethod in deliveryMethods)
+                        {
+                            storeContext.Set<DeliveryMethod>().Add(deliveryMethod);
+                        }
+                        await storeContext.SaveChangesAsync();
+
+                    }
+                }
             }
         }
         #endregion
