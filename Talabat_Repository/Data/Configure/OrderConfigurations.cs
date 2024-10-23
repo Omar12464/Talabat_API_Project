@@ -22,7 +22,8 @@ namespace Talabat_Repository.Data.Configure
             //builder.HasIndex(o => o.deliveryMethod).IsUnique();
             builder.Property(o => o.SubTotal)
                 .HasColumnType("decimal(18,2)");
-
+            builder.HasOne(o => o.deliveryMethod).WithMany()
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

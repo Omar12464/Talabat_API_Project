@@ -28,7 +28,7 @@ namespace Talabat_Core.Order_Aggregate
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
         public OrderStatus Status { get; set; }
         public Address ShippingAddress { get; set; }
-        //public int DeliveryMethod { get; set; }
+        //public int? DeliveryMethodId { get; set; }
         public DeliveryMethod deliveryMethod { get; set; }
 
         public ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();
