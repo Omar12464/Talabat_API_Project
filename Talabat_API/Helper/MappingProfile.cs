@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Talabat_API.DTOs;
 using Talabat_Core.Models;
+using Talabat_Core.Order_Aggregate;
 using static System.Net.WebRequestMethods;
 
 namespace Talabat_API.ProfileMap
@@ -16,6 +17,8 @@ namespace Talabat_API.ProfileMap
                 .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductPictureURLResolver_>());
             CreateMap<CuatomreBasketDTO, CustomerBasket>();
             CreateMap<BasketItemDTO, BasketItem>();
+            CreateMap<AddressDTO, Address>();
+
         }
     }
 }

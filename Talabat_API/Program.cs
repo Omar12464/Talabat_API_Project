@@ -8,12 +8,15 @@ using StackExchange.Redis;
 using Talabat_API.Errors;
 using Talabat_API.MiddleWare;
 using Talabat_API.ProfileMap;
+using Talabat_Core;
 using Talabat_Core.Models;
 using Talabat_Core.Models.Identity;
 using Talabat_Core.Repositories_InterFaces;
+using Talabat_Repository;
 using Talabat_Repository.Data;
 using Talabat_Repository.Data.Identity;
 using Talabat_Repository.RepositoreisClasses;
+using Talabat_Service;
 
 namespace Talabat_API
 
@@ -49,6 +52,9 @@ namespace Talabat_API
                 }
                 );
             builder.Services.AddScoped(typeof(IBasketRepo), typeof(BasketRepo));
+
+            builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            builder.Services.AddScoped(typeof(IOrderRepo), typeof(OrderService));
 
             builder.Services.AddScoped<IGenericIcs<Product>, GenericRepo<Product>>();
             builder.Services.AddScoped<IGenericIcs<ProductBrand>, GenericRepo<ProductBrand>>();

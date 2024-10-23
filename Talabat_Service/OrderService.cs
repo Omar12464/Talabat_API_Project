@@ -13,9 +13,9 @@ namespace Talabat_Service
     public class OrderService : IOrderRepo
     {
         private readonly IBasketRepo _basketRepo;
-        private readonly IGenericIcs<Product> _productRepo;
-        private readonly IGenericIcs<DeliveryMethod> _deliveryrepo;
-        private readonly IGenericIcs<Order> _orderRepo;
+        //private readonly IGenericIcs<Product> _productRepo;
+        //private readonly IGenericIcs<DeliveryMethod> _deliveryrepo;
+        //private readonly IGenericIcs<Order> _orderRepo;
         private readonly IUnitOfWork _unitOfWork;
 
         public OrderService(IBasketRepo basketRepo,IGenericIcs<Product> productRepo,IUnitOfWork unitOfWork)
@@ -23,7 +23,7 @@ namespace Talabat_Service
             _basketRepo = basketRepo;
             _unitOfWork = unitOfWork;
         }
-        public async Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
+        public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
         {
             //1.Get Basket REPO
             var basket =await _basketRepo.GetBasketAsync(basketId);
@@ -35,7 +35,7 @@ namespace Talabat_Service
             {
                 foreach(var basketItems in basket.Items)
                 {
-                    var product =await _productRepo.GetAsync(basketItems.Id);
+                    var product =await _unitOfWork.Repo<Product>().GetAsync(basketItems.Id);
                     var productItemOrdered = new ProductItemOrder(basketItems.Id, product.Name, product.PictureUrl);
                     var orderItem = new OrderItem(productItemOrdered, product.Price, basketItems.Quantity);
                     orderItems.Add(orderItem);
@@ -44,13 +44,21 @@ namespace Talabat_Service
             //3.Calculate SubTotal
             var subTotal = orderItems.Sum(orderItems=>orderItems.Price*orderItems.Quantity);
             //4.Get DeliverMethods from deliverymethods repo
-            var deliveryMethod =await _deliveryrepo.GetAsync(deliveryMethodId);
+            var deliveryMethod =await _unitOfWork.Repo<DeliveryMethod>().GetAsync(deliveryMethodId);
             //5.create Order
             var order=new Order(buyerEmail,shippingAddress,deliveryMethod,orderItems,subTotal);
-            await _orderRepo.AddAsync(order);
+            await _unitOfWork.Repo<Order>().AddAsync(order);
 
             //6.Save to database
-           
+          var result=await  _unitOfWork.CompleteAsync();
+            if (result <= 0)
+            {
+                return null;
+            }
+            else
+            {
+                return order;
+            }
 
         }
 

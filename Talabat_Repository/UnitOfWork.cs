@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,13 @@ namespace Talabat_Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly StoreContext _dbcontext;
-        private Dictionary<string, GenericRepo<ModelBase>> _Repos;
+        //private Dictionary<string, GenericRepo<ModelBase>> _Repos;
+        private Hashtable _repos;
 
         public UnitOfWork(StoreContext dbcontext)
         {
             _dbcontext = dbcontext;
-            _Repos = new Dictionary<string, GenericRepo<ModelBase>>();
+            _repos = new Hashtable();
             //ProductRepo = new GenericRepo<Product>(dbcontext);
             //BrandRepo = new GenericRepo<ProductBrand>(dbcontext);
             //CategoryRepo = new GenericRepo<ProductType>(dbcontext);
@@ -48,12 +50,12 @@ namespace Talabat_Repository
         public IGenericIcs<TEntity> Repo<TEntity>() where TEntity : ModelBase
         {
             var key=typeof(TEntity).Name;
-            if (!_Repos.ContainsKey(key))
+            if (!_repos.ContainsKey(key))
             {
-                var repo=new GenericRepo<TEntity>(_dbcontext)as GenericRepo<ModelBase>;
-                _Repos.Add(key, repo);
+                var repo=new GenericRepo<TEntity>(_dbcontext);
+                _repos.Add(key, repo);
             }
-            return _Repos[key] as IGenericIcs<TEntity>;
+            return _repos[key] as IGenericIcs<TEntity>;
         }
     }
 }
