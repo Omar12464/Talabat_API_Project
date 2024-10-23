@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\DataSeeding\" />
     <Folder Include="Data\Identity\Configurations\" />
     <Folder Include="Data\Identity\DataSeeding\" />
   </ItemGroup>
