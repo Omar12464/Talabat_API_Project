@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Talabat_Core;
 using Talabat_Core.Models;
 using Talabat_Core.Order_Aggregate;
 using Talabat_Core.Repositories_InterFaces;
@@ -15,13 +16,12 @@ namespace Talabat_Service
         private readonly IGenericIcs<Product> _productRepo;
         private readonly IGenericIcs<DeliveryMethod> _deliveryrepo;
         private readonly IGenericIcs<Order> _orderRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public OrderService(IBasketRepo basketRepo,IGenericIcs<Product> productRepo, IGenericIcs<DeliveryMethod> deliveryrepo,IGenericIcs<Order> OrderRepo)
+        public OrderService(IBasketRepo basketRepo,IGenericIcs<Product> productRepo,IUnitOfWork unitOfWork)
         {
             _basketRepo = basketRepo;
-            _productRepo = productRepo;
-            _deliveryrepo = deliveryrepo;
-            _orderRepo = OrderRepo;
+            _unitOfWork = unitOfWork;
         }
         public async Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
         {
@@ -50,7 +50,7 @@ namespace Talabat_Service
             await _orderRepo.AddAsync(order);
 
             //6.Save to database
-            _
+           
 
         }
 
