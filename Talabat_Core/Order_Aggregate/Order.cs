@@ -13,15 +13,13 @@ namespace Talabat_Core.Order_Aggregate
         {
             
         }
-        public Order(string buyerEmail, OrderStatus status, Address shippingAddress, DeliveryMethod _deliveryMethod, ICollection<OrderItem> items, decimal subTotal, decimal total)
+        public Order(string buyerEmail, Address shippingAddress, DeliveryMethod _deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
         {
             BuyerEmail = buyerEmail;
-            Status = status;
             ShippingAddress = shippingAddress;
             deliveryMethod = _deliveryMethod;
             Items = items;
             SubTotal = subTotal;
-            Total = total;
         }
 
         public string BuyerEmail { get; set; }

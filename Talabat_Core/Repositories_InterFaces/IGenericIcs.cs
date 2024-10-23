@@ -18,5 +18,9 @@ namespace Talabat_Core.Repositories_InterFaces
         public Task<T> GettWithSpecAsync(ISpecification<T> spec);
 
         public Task<T> GetCountAsync(ISpecification<T> spec);
+        Task AddAsync(T entity);
+        void UpdateAsync(T entity);
+        void DeleteAsync(T entity);
+
     }
 }

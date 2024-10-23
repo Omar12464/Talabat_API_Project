@@ -20,6 +20,15 @@ namespace Talabat_Repository.RepositoreisClasses
             _dbcontext = dbcontext;
         }
 
+        public async Task AddAsync(T entity)
+        {
+          await  _dbcontext.AddAsync(entity);
+        }
+
+        public  void DeleteAsync(T entity)
+        {
+            _dbcontext.Remove(entity);
+        }
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
@@ -43,6 +52,11 @@ namespace Talabat_Repository.RepositoreisClasses
         public Task<T> GetCountAsync(ISpecification<T> spec)
         {
             throw new NotImplementedException();
+        }
+
+        public  void UpdateAsync(T entity)
+        {
+             _dbcontext.Update(entity);
         }
 
         //public async Task<T> GetCountAsync(ISpecification<T> spec)
