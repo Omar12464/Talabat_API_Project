@@ -37,6 +37,6 @@ namespace Talabat_Core.Order_Aggregate
         {
             return SubTotal + Total;
         }
-        public string PaymentIntentId { get; set; }
+        public string? PaymentIntentId { get; set; }
     }
 }
