@@ -28,7 +28,7 @@ namespace Talabat_API.ProfileMap
                 .ForMember(d => d.ProductName, o => o.MapFrom(s => s.productItem.ProductName))
                 .ForMember(d => d.ProductUrl, o => o.MapFrom(s => s.productItem.ProductUrl))
                 .ForMember(d=>d.ProductUrl,o=>o.MapFrom<OrderItemPictureURLResolver>());
-
+            CreateMap<Address, AdressDtoo>();
         }
     }
 }

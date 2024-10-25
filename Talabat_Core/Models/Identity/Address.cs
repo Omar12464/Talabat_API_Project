@@ -1,4 +1,6 @@
-﻿namespace Talabat_Core.Models.Identity
+﻿using System.Text.Json.Serialization;
+
+namespace Talabat_Core.Models.Identity
 {
     public class Address
     {
@@ -9,7 +11,8 @@
         public string City { get; set; }
         public string Country { get; set; }
         public string AppUserId { get; set; }
-        //public AppUser appUser { get; set; }
+        [JsonIgnore]
+        public AppUser appUser { get; set; }
 
 
     }

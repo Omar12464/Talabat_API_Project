@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,12 +19,14 @@ namespace Talabat_API.Controllers
         private readonly UserManager<AppUser> _userMnager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<AppUser> userMnager,SignInManager<AppUser> signInManager,IAuthService authService)
+        public AccountController(UserManager<AppUser> userMnager,SignInManager<AppUser> signInManager,IAuthService authService,IMapper mapper)
         {
             _userMnager = userMnager;
             _signInManager = signInManager;
             _authService = authService;
+            _mapper = mapper;
         }
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO login)
@@ -79,11 +82,11 @@ namespace Talabat_API.Controllers
         }
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("address")]
-        public async Task<ActionResult<Address>> GetAddress()
+        public async Task<ActionResult<AdressDtoo>> GetAddress()
         {
-            var email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
             var user = await _userMnager.FindUserWithAddressByEmailAsync(User);
-            return Ok(user.Address);
+            var map = _mapper.Map<Address, AdressDtoo>(user.Address);
+            return Ok(map);
         }
 
     }
