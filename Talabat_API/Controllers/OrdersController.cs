@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using Talabat_API.DTOs;
 using Talabat_API.Errors;
 using Talabat_Core.Order_Aggregate;
@@ -28,21 +29,22 @@ namespace Talabat_API.Controllers
            var map= _mapper.Map<AddressDTO, Address>(orderDto.ShippingAddress);
            var order= await _orderService.CreateOrderAsync(orderDto.BuyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId,map);
             if (order is null) return BadRequest(new APIResponse(400));
-            else return Ok(order);
+            else return Ok(_mapper.Map<OrderToReturnDTO>(order));
         }
-        [HttpGet]
+        [HttpGet()] // Explicit route to differentiate the two methods
         public async Task<ActionResult<IReadOnlyList<Order>>> GetOrderForUser(string email)
         {
-            var orders=await _orderService.GetOrderForUserAsync(email);
+            var orders = await _orderService.GetOrderForUserAsync(email);
             return Ok(orders);
-
         }
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrderForUser(int id,string email)
+        public async Task<ActionResult<Order>> GetOrderForUser(int id, string email)
         {
-            var order=await _orderService.CreateOrderByIdForUserAsync(id,email);
+            var order = await _orderService.CreateOrderByIdForUserAsync(id, email);
             if (order is null) return NotFound(new APIResponse(404));
             return Ok(order);
         }
+
     }
 }
