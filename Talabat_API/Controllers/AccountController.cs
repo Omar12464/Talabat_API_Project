@@ -48,6 +48,11 @@ namespace Talabat_API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO register)
         {
+            if (CheckEmailExist(register.Email).Result.Value)
+                return BadRequest(new ApiValidationErrorResponse()
+                {
+                    Errors = new string[] { "This email is exist" }
+                });
             //create User
             var user = new AppUser() {
                 DisplayName=register.DisplayName,Email=register.Email ,
@@ -88,6 +93,23 @@ namespace Talabat_API.Controllers
             var map = _mapper.Map<Address, AdressDtoo>(user.Address);
             return Ok(map);
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("address")]
+        public async Task<ActionResult<Address>> UpdateUserAddress(AdressDtoo address)
+        {
+            var updateAddress = _mapper.Map<AdressDtoo, Address>(address);
+            var user = await _userMnager.FindUserWithAddressByEmailAsync(User);
+            updateAddress.Id=user.Address.Id;
+            user.Address = updateAddress;
+            var result=await _userMnager.UpdateAsync(user);
+            if(!result.Succeeded)return BadRequest(new APIResponse(400));
+            return Ok(address);
 
+        }
+        [HttpGet("emailExist")]
+        public async Task<ActionResult<bool>> CheckEmailExist(string email)
+        {
+            return await _userMnager.FindByEmailAsync(email.ToLower()) is not null;
+        }
     }
 }
