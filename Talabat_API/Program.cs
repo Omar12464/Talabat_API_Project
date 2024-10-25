@@ -1,10 +1,13 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 using Talabat_API.Errors;
 using Talabat_API.MiddleWare;
 using Talabat_API.ProfileMap;
@@ -12,6 +15,7 @@ using Talabat_Core;
 using Talabat_Core.Models;
 using Talabat_Core.Models.Identity;
 using Talabat_Core.Repositories_InterFaces;
+using Talabat_Core.ServiceInterfaces;
 using Talabat_Repository;
 using Talabat_Repository.Data;
 using Talabat_Repository.Data.Identity;
@@ -28,6 +32,7 @@ namespace Talabat_API
 
 
             var builder = WebApplication.CreateBuilder(args);
+            var _configuration=builder.Configuration;
 
             // Add services to the container.
 
@@ -55,7 +60,7 @@ namespace Talabat_API
 
             builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             builder.Services.AddScoped(typeof(IOrderRepo), typeof(OrderService));
-
+            builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
             builder.Services.AddScoped<IGenericIcs<Product>, GenericRepo<Product>>();
             builder.Services.AddScoped<IGenericIcs<ProductBrand>, GenericRepo<ProductBrand>>();
             builder.Services.AddScoped<IGenericIcs<ProductType>, GenericRepo<ProductType>>();
@@ -79,6 +84,24 @@ namespace Talabat_API
 
                  }
                 );
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+              .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:AuthKey"]?? string.Empty)),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidIssuer = _configuration["JWT:ValidIssuer"],
+                        ValidAudience = _configuration["JWT:ValidAudience"]
+                    };
+              });
+
             builder.Services.AddIdentity<AppUser, IdentityRole>(
                 options =>
                 {
@@ -124,6 +147,7 @@ namespace Talabat_API
             app.UseStatusCodePagesWithRedirects("/Errors/{0}");
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
