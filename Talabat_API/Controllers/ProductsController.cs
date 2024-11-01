@@ -25,7 +25,7 @@ namespace Talabat_API.Controllers
             _genericrepo = genericrepo;
             _map = map;
         }
-
+        [CachedAttribute(300)]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<ProductDTO>>> GetProducts([FromQuery]ProductSpecification paramss)
         {
