@@ -7,6 +7,7 @@ using Talabat_Core;
 using Talabat_Core.Models;
 using Talabat_Core.Order_Aggregate;
 using Talabat_Core.Repositories_InterFaces;
+using Talabat_Core.ServiceInterfaces;
 using Talabat_Core.Specification.OrderSpecifications;
 
 namespace Talabat_Service
@@ -18,11 +19,13 @@ namespace Talabat_Service
         //private readonly IGenericIcs<DeliveryMethod> _deliveryrepo;
         //private readonly IGenericIcs<Order> _orderRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPaymentService _payment;
 
-        public OrderService(IBasketRepo basketRepo,IGenericIcs<Product> productRepo,IUnitOfWork unitOfWork)
+        public OrderService(IBasketRepo basketRepo,IGenericIcs<Product> productRepo,IUnitOfWork unitOfWork,IPaymentService payment)
         {
             _basketRepo = basketRepo;
             _unitOfWork = unitOfWork;
+            _payment = payment;
         }
         public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
         {
@@ -46,8 +49,16 @@ namespace Talabat_Service
             var subTotal = orderItems.Sum(orderItems=>orderItems.Price*orderItems.Quantity);
             //4.Get DeliverMethods from deliverymethods repo
             var deliveryMethod =await _unitOfWork.Repo<DeliveryMethod>().GetAsync(deliveryMethodId);
+
             //5.create Order
-            var order=new Order(buyerEmail,shippingAddress,deliveryMethod,orderItems,subTotal);
+            var spec =new OrderWithPaymentIntentSpec(basket.PaymentIntentId);
+            var ExOrder =await _unitOfWork.Repo<Order>().GettWithSpecAsync(spec);
+            if(ExOrder is not null)
+            {
+                _unitOfWork.Repo<Order>().DeleteAsync(ExOrder);
+               await _payment.CreateOrUpdatePaymentIntent(basketId);
+            }
+            var order=new Order(buyerEmail,shippingAddress,deliveryMethod,orderItems,subTotal,basket.PaymentIntentId);
             await _unitOfWork.Repo<Order>().AddAsync(order);
 
             //6.Save to database
