@@ -16,12 +16,14 @@ namespace Talabat_API.ProfileMap
                 .ForMember(b => b.Brand, o => o.MapFrom(s => s.Brand.Name))
                 .ForMember(d=>d.Category,o=>o.MapFrom(c=>c.Category.Name))
                 .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductPictureURLResolver_>());
-            CreateMap<CuatomreBasketDTO, CustomerBasket>();
-            CreateMap<BasketItemDTO, BasketItem>();
+            CreateMap<CuatomreBasketDTO, CustomerBasket>().ReverseMap();
+            CreateMap<BasketItemDTO, BasketItem>().ReverseMap();
             CreateMap<AddressDTO, Address>();
             CreateMap<Order, OrderToReturnDTO>()
                 .ForMember(D => D.deliveryMethod, o => o.MapFrom(s => s.deliveryMethod.ShortName))
-                .ForMember(d => d.deliveryMethodCost, o => o.MapFrom(s => s.deliveryMethod.Cost));
+                .ForMember(d => d.deliveryMethodCost, o => o.MapFrom(s => s.deliveryMethod.Cost))  
+                .ForMember(d => d.Total, o => o.MapFrom(s => s.GetTotal()));
+
 
             CreateMap<OrderItem, OrderItemDTO>()
                 .ForMember(d => d.ProductId, o => o.MapFrom(s => s.productItem.ProductId))
