@@ -67,6 +67,7 @@ namespace Talabat_API
             builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             builder.Services.AddScoped(typeof(IOrderRepo), typeof(OrderService));
             builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
+            builder.Services.AddScoped(typeof(IPaymentService),typeof(PaymentService));
             builder.Services.AddScoped<IGenericIcs<Product>, GenericRepo<Product>>();
             builder.Services.AddScoped<IGenericIcs<ProductBrand>, GenericRepo<ProductBrand>>();
             builder.Services.AddScoped<IGenericIcs<ProductType>, GenericRepo<ProductType>>();
